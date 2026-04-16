@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestra Historia 🥚</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Homemade+Apple&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #fdf6ec;
+      --blush: #f2c4b0;
+      --rose: #d9826a;
+      --deep: #3b2a2a;
+      --warm: #8b5e52;
+      --gold: #c9a96e;
+      --soft: #f9efe6;
+      --muted: #c4a090;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ─── Homemade Apple global ─── */
+    [style*="Homemade Apple"],
+    .splash-sub,
+    .hero-tag,
+    .scroll-hint,
+    .month-number,
+    .modal-meta,
+    .modal-meta,
+    .spotify-label,
+    .nido-hint,
+    .cert-title + p,
+    #constelacion-hint,
+    footer {
+      -webkit-font-smoothing: antialiased;
+      text-shadow: 0 1px 3px rgba(59,42,42,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--deep);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ─── FONDO DINÁMICO ─── */
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(120deg, #fdf6ec, #f9efe6, #f2c4b033);
+      background-size: 300% 300%;
+      animation: gradientMove 15s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ─── SPLASH SCREEN ─── */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: var(--deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    #splash.hidden {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    .egg-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 2rem;
+      cursor: pointer;
+    }
+
+    .egg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: pulse 2s ease-in-out infinite;
+      transition: transform 0.2s ease;
+      filter: drop-shadow(0 0 24px rgba(242,196,176,0.5));
+    }
+
+    .egg:hover { transform: scale(1.05) rotate(-3deg); }
+
+    .egg-crack {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    .heartbeat {
+      position: absolute;
+      inset: 0;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: transparent;
+      border: 2px solid rgba(242, 196, 176, 0.3);
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); opacity: 0.6; }
+      14% { transform: scale(1.08); opacity: 0.8; }
+      28% { transform: scale(1); opacity: 0.4; }
+      42% { transform: scale(1.05); opacity: 0.7; }
+      70% { transform: scale(1); opacity: 0; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
+    .splash-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      color: var(--cream);
+      text-align: center;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .splash-sub {
+      font-family: 'Homemade Apple';
+      font-size: 1.6rem;
+      color: var(--blush);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.05em;
+      text-shadow: 0 1px 4px rgba(59,42,42,0.18);
+    }
+
+    .splash-btn {
+      background: transparent;
+      border: 1.5px solid var(--blush);
+      color: var(--blush);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.8rem 2.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .splash-btn:hover {
+      background: var(--blush);
+      color: var(--deep);
+    }
+
+    /* ─── MAIN APP ─── */
+    #app { display: none; }
+    #app.visible { display: block; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -20%;
+      width: 70vw;
+      height: 70vw;
+      max-width: 600px;
+      max-height: 600px;
+      background: radial-gradient(circle, rgba(242,196,176,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      max-width: 400px;
+      max-height: 400px;
+      background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1.4rem;
+      color: var(--rose);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.2s;
+      text-shadow: 0 1px 4px rgba(59,42,42,0.15);
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 10vw, 5.5rem);
+      line-height: 1.05;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.4s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .hero-desc {
+      max-width: 420px;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--warm);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.6s;
+    }
+
+    .scroll-hint {
+      font-family: 'Homemade Apple', cursive;
+      color: var(--muted);
+      font-size: 1.25rem;
+      animation: fadeUp 0.8s ease forwards, bob 2s ease-in-out 1.5s infinite;
+      text-shadow: 0 1px 3px rgba(59,42,42,0.12);
+      opacity: 0;
+      animation-delay: 1s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .scroll-hint::after {
+      content: '↓';
+      font-size: 1.2rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ─── TIMELINE LAYOUT ─── */
+    .timeline {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 6vh 2rem 10vh;
+    }
+
+    .month-entry {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15vh;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+    }
+
+    .month-entry.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .month-entry:nth-child(even) { align-items: flex-end; }
+
+    .month-entry.locked { cursor: not-allowed; }
+
+    .month-visual {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 4/5;
+      background: var(--soft);
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      box-shadow: 0 10px 30px rgba(59,42,42,0.05);
+    }
+
+    .month-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s ease;
+    }
+
+    .month-entry:not(.locked):hover .month-visual img { transform: scale(1.05); }
+
+    .month-info {
+      margin-top: -2rem;
+      padding: 2rem;
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      z-index: 2;
+      border-radius: 2px;
+      box-shadow: 10px 10px 40px rgba(0,0,0,0.03);
+    }
+
+    .month-number {
+      font-family: 'Homemade Apple', cursive;
+      color: var(--rose);
+      font-size: 1.45rem;
+      display: block;
+      margin-bottom: 0.3rem;
+      text-shadow: 0 1px 4px rgba(59,42,42,0.12);
+    }
+
+    .month-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.2;
+    }
+
+    .lock-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--muted);
+    }
+
+    .lock-icon svg { opacity: 0.5; }
+
+    .lock-icon span {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    /* ─── AJUSTES PARA ESCRITORIO ─── */
+    @media (min-width: 1024px) {
+      .month-entry {
+        flex-direction: row !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4rem;
+        margin-bottom: 25vh;
+      }
+
+      .month-entry:nth-child(even) {
+        flex-direction: row-reverse !important;
+      }
+
+      .month-visual {
+        flex: 1;
+        max-width: 550px;
+        height: 650px;
+      }
+
+      .month-info {
+        flex: 1;
+        max-width: 450px;
+        margin-top: 0;
+        padding: 3rem;
+        background: transparent;
+        box-shadow: none;
+      }
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 20, 20, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    @media (min-width: 600px) {
+      .modal-overlay { align-items: center; }
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--cream);
+      width: 100%;
+      max-width: 560px;
+      max-height: 92svh;
+      border-radius: 16px 16px 0 0;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    @media (min-width: 600px) {
+      .modal {
+        border-radius: 12px;
+        transform: translateY(30px) scale(0.96);
+        max-height: 88svh;
+      }
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--muted);
+      border-radius: 2px;
+      margin: 0.8rem auto 0;
+      opacity: 0.4;
+    }
+
+    @media (min-width: 600px) { .modal-handle { display: none; } }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--warm);
+      font-size: 1.4rem;
+      line-height: 1;
+      padding: 0.3rem;
+      z-index: 10;
+    }
+
+    .modal-photos {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: var(--soft);
+    }
+
+    .photo-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .photo-slide.active { opacity: 1; }
+
+    .photo-nav {
+      position: absolute;
+      bottom: 0.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.4rem;
+      z-index: 5;
+    }
+
+    .photo-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .photo-dot.active { background: white; }
+
+    .photo-arrows {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.8rem;
+      z-index: 5;
+    }
+
+    .photo-arrow {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+    }
+
+    .photo-arrow:hover { background: rgba(255,255,255,0.4); }
+
+    .modal-body {
+      padding: 1.5rem 1.5rem 2rem;
+    }
+
+    .modal-meta {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1.1rem;
+      color: var(--rose);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 1px 3px rgba(59,42,42,0.12);
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .modal-text {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--warm);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    /* Spotify embed */
+    .spotify-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .spotify-label {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1.05rem;
+      text-shadow: 0 1px 3px rgba(59,42,42,0.1);
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .spotify-qr {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--soft);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+    }
+
+    .spotify-qr img {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .spotify-info { flex: 1; }
+    .spotify-song { font-weight: 500; font-size: 0.9rem; margin-bottom: 0.1rem; }
+    .spotify-artist { font-size: 0.8rem; color: var(--muted); }
+
+    .spotify-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: #1DB954;
+      text-decoration: none;
+      margin-top: 0.3rem;
+      font-weight: 500;
+    }
+
+    /* Add photo button */
+    .add-photo-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: transparent;
+      border: 1.5px dashed var(--muted);
+      border-radius: 6px;
+      color: var(--warm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .add-photo-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: rgba(217,130,106,0.05);
+    }
+
+    /* ─── MONTH 9 SPECIAL ─── */
+    .birth-modal .modal-photos {
+      aspect-ratio: unset;
+      min-height: 200px;
+      background: var(--deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .birth-egg {
+      font-size: 5rem;
+      animation: hatch 1s ease forwards;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes hatch {
+      0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+      60% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .certificate {
+      background: var(--soft);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .certificate::before {
+      content: '✦';
+      position: absolute;
+      top: -0.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--cream);
+      padding: 0 0.5rem;
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    .cert-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .cert-names {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--deep);
+      margin-bottom: 0.3rem;
+    }
+
+    .cert-date {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1rem;
+      color: var(--rose);
+    }
+
+    /* ─── EL NIDO (MES 9 ESPECIAL) ─── */
+    .nido-especial {
+      text-align: center;
+      cursor: pointer;
+      margin: 10vh auto 8vh;
+      max-width: 400px;
+    }
+
+    .nido-especial h3 {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 2rem;
+      color: var(--rose);
+      margin-bottom: 1rem;
+    }
+
+    .nido-emoji {
+      width: 260px;
+      height: 260px;
+      display: inline-block;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+      filter: drop-shadow(0 4px 16px rgba(59,42,42,0.18));
+    }
+
+    .nido-especial:hover .nido-emoji {
+      transform: scale(1.12) rotate(3deg);
+    }
+
+    .nido-hint {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-top: 0.8rem;
+    }
+
+    /* ─── CONSTELACIÓN ─── */
+    #constelacion {
+      position: fixed;
+      inset: 0;
+      background: #0b0e14;
+      z-index: 200;
+      display: none;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    #stars-container {
+      height: 100vh;
+      position: relative;
+      width: 100%;
+    }
+
+    #constelacion-hint {
+      color: rgba(255,255,255,0.7);
+      position: absolute;
+      top: 1.2rem;
+      width: 100%;
+      text-align: center;
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1.4rem;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .star-photo {
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      opacity: 0.55;
+      transition: all 0.45s ease;
+      object-fit: cover;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .star-photo.active {
+      opacity: 1;
+      box-shadow: 0 0 24px rgba(255,255,255,0.75);
+      transform: scale(1.2);
+    }
+
+    #constelacion canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .constelacion-close {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .constelacion-close:hover { background: rgba(255,255,255,0.1); }
+
+    .tamagochi-final {
+      width: 320px;
+      height: 320px;
+      display: block;
+      object-fit: contain;
+      margin: 100px auto 2rem;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(242,196,176,0.4));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-20px); }
+    }
+
+    /* ─── EFECTO POLAROID ─── */
+    .polaroid {
+      background: white;
+      padding: 10px 10px 30px 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-radius: 2px;
+      position: absolute;
+      width: 200px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: zoom-in;
+    }
+
+    .polaroid.zoomed {
+      transform: rotate(0deg) scale(1.5) !important;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7) !important;
+      z-index: 9999 !important;
+      cursor: zoom-out;
+    }
+
+    .polaroid img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    /* ─── CONTENEDOR DE SCROLL FINAL ─── */
+    #espacio-final {
+      display: none;
+      position: relative;
+      width: 100%;
+      min-height: 400vh;
+      padding-top: 10vh;
+    }
+
+    .reinicio-btn {
+      display: block;
+      margin-bottom: 40px !important;
+      padding: 15px 40px;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    /* ─── LIGHTBOX ─── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 2px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      z-index: 10;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.1); }
+
+    /* ─── REPRODUCTOR FLOTANTE ─── */
+    #music-player {
+      position: fixed;
+      bottom: 1.2rem;
+      right: 1.2rem;
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    #music-player.visible { display: flex; }
+    #music-toggle {
+      background: var(--rose);
+      border: none;
+      border-radius: 50%;
+      width: 46px;
+      height: 46px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(59,42,42,0.25);
+      transition: transform 0.2s ease, background 0.2s;
+      flex-shrink: 0;
+    }
+    #music-toggle:hover { transform: scale(1.08); background: var(--warm); }
+    #music-toggle svg { width: 20px; height: 20px; fill: white; }
+    #music-embed {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(59,42,42,0.2);
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      width: 280px;
+    }
+    #music-embed.open {
+      max-height: 100px;
+      opacity: 1;
+      pointer-events: all;
+    }
+    #music-embed iframe { display: block; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-family: 'Homemade Apple', cursive;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--rose); }
+  </style>
+</head>
+<body>
+
+  <div class="bg-animated"></div>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="egg-container" onclick="enterApp()">
+      <img class="egg" src="https://drive.google.com/thumbnail?id=1PqAjuot5V_W7yy5NhG4IDm-EzRDTkxEC&sz=w400" alt="tamagochi gestando" />
+    </div>
+    <h1 class="splash-title">Nuestro<br/>Tamagochi</h1>
+    <p class="splash-sub">Para Nana — con todo 🥚</p>
+    <button class="splash-btn" onclick="enterApp()">Toca para abrir</button>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="hero-tag">9 meses · 1 historia</p>
+      <h1 class="hero-title">Algo <em>nació</em><br/>entre nosotros</h1>
+      <p class="hero-desc">
+        Nueve meses de gestación. Nueve meses en los que algo murió, algo creció,
+        y algo completamente nuevo llegó al mundo. Esto no es un regalo. Es un certificado de que existimos.
+      </p>
+      <div class="scroll-hint">Explora cada mes</div>
+    </section>
+
+    <!-- MONTHS -->
+    <section class="timeline" id="timelineGrid"></section>
+
+    <!-- MES 9 - EL NIDO -->
+    <div class="nido-especial" onclick="irAConstelacion()">
+      <h3>¿Qué hay aquí?</h3>
+      <img class="nido-emoji" src="https://drive.google.com/thumbnail?id=13UJ2L51f0MNL0E6Eq7vpVUvpB3eQ5sTk&sz=w400" alt="tamagochi naciendo" />
+      <p class="nido-hint">Toca para descubrir el último mes...</p>
+    </div>
+
+    <footer>
+      hecho con manos torpes y corazón abierto &nbsp;—&nbsp; <span>te amo</span>
+    </footer>
+  </div>
+
+  <!-- CONSTELACIÓN MES 9 -->
+  <div id="constelacion">
+    <button class="constelacion-close" onclick="cerrarConstelacion()">✕</button>
+    <div id="stars-container">
+      <canvas id="lineas"></canvas>
+      <p id="constelacion-hint">Une los 9 meses...</p>
+    </div>
+    <div id="espacio-final">
+      <img class="tamagochi-final" src="https://drive.google.com/thumbnail?id=1IbxjvW01Bt-Wv7ZJEBols6_rsHDUDD4a&sz=w400" alt="tamagochi nacido" />
+      <h1 style="color:white; text-align:center; font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3rem); margin-bottom:1rem;">¡Nació el amor!</h1>
+      <p style="color:var(--blush); text-align:center; font-family:'Homemade Apple',cursive; font-size:1.1rem; padding:0 2rem; margin-bottom:2rem;">Feliz noveno mesiversario, Nana.</p>
+      <p style="color:rgba(253,246,236,0.88); text-align:center; font-family:'DM Sans',sans-serif; font-size:1rem; line-height:1.85; padding:0 2rem 3rem; max-width:580px; margin:0 auto; font-style:italic;">En este noveno mes solo puedo pedirle a Dios que tenga un buen día en sus manos. Ya tenemos retos y situaciones complicadas, pero siento que aunque la vida se ponga más difícil, nosotros ya no somos los mismos de aquel primer mes y nuestro amor ha madurado. Me siento muy emocionado, optimista y expectante por lo que Dios tiene para nuestro futuro. Solo nos queda vivirlo, romantizar nuestra vida y seguir amando tan bonito como lo hacemos. Feliz noveno mesiversario, Nanita. Te amo. Soy el más afortunado de tenerte a mi lado. Me maravilla todo lo que eres.</p>
+    </div>
+  </div>
+
+  <!-- REPRODUCTOR FLOTANTE -->
+  <div id="music-player">
+    <div id="music-embed">
+      <iframe src="https://open.spotify.com/embed/track/0WQiDwKJclirSYG9v5tayI?utm_source=generator" width="280" height="100" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    <button id="music-toggle" onclick="toggleMusic()" title="Música">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+    </button>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" onclick="closeLightboxOnBg(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="foto ampliada" />
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+    <div class="modal" id="modal">
+      <div class="modal-handle"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // ─── DATA ───────────────────────────────────────────────────────────────
+    // 🔧 CONFIGURA AQUÍ TUS DATOS
+    // Para fotos: pega el link de Google Photos (compartir → copiar link)
+    // Para Spotify: pega el link de la canción
+    // Para el texto: escribe lo que sientas de ese mes
+
+    const months = [
+      {
+        number: 1,
+        name: "El primer latido",
+        emoji: "🌱",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1kgW9fKliIDp0Ul1QG_BX_V7mUeGCPwqJ') },
+          { url: getDriveUrl('1eoMI6NeVQVOknZQyXTUmPLxvvrOBGWOW') },
+          { url: getDriveUrl('1dT-WF3ZjmCPxYOiY-gFd26lDq1LI6vRe') },
+          { url: getDriveUrl('1IUkiYSkTCXquAJ1p7mre41tiAier6Ueo') },
+          { url: getDriveUrl('1Ppg3PwGjDAlcheqxiEVpZlY2GCe8XUOw') },
+          { url: getDriveUrl('1tkO1q8jxvv8UcPwhwz21o_jhiNt5EASr') },
+          { url: getDriveUrl('18hbCa0SCRv2Y-n41bUwMpCB4b5xR3GRF') },
+          { url: getDriveUrl('1VcEF4vW8VaS-zJx--X8yUrpJ9CS9q54q') },
+          { url: getDriveUrl('1j0InS0QkzwNxiMVRKtBvV6WJrwznBGe-') },
+          { url: getDriveUrl('1yFeO2Y6O2Ec4AQ5pCryKsXu1fZ_AFid4') },
+          { url: getDriveUrl('1A9hhx_Q01JkoEtrLGZjhBwhB__eA3jq9') },
+          { url: getDriveUrl('1d7foWV76_EUGfCmUVvlGZlePf_4zcWut') },
+          { url: getDriveUrl('1XcMSu2VmFbR0_cSiPtF8xZKlEz70lXST') },
+          { url: getDriveUrl('1YoIzMJV8JXruWxN2CZvQSw_wwGKyvHgv') },
+          { url: getDriveUrl('1gaj5-V71UirssgK47NpQOoVRpA2S3T9u') },
+          { url: getDriveUrl('1BM-K5vlu1lyzu1BPMyqtcEUmP2nRWtHQ') },
+          { url: getDriveUrl('10Pv36yN_2XCpLGPeFAsXuAxAYk6JgdO-') },
+          { url: getDriveUrl('1Ls0YTqmLrJUC4_LfvTI6mnnU_7_wB1V5') },
+          { url: getDriveUrl('1AU7ZjqYJSiNbQ7EySY03R6A6SItQd3zk') },
+          { url: getDriveUrl('1tISEIJ2aC5N-lgOmh0YP7AqQXhYDzd0m') },
+          { url: getDriveUrl('1dQGHzDuZJWRjFhvczE0in7K98miCmpmW') },
+        ],
+        text: "En este primer mes solo recuerdo ilusión, nervios y un deseo inmenso de amarte. Todo se sentía como una película romántica de los noventa, o en sus palabras un k-drama todo lindo. Solo podía pensar en vos, en compartir esa magia y en hacerte descubrir la belleza del amor. Cada momento era hipermega especial. Me sentía el más afortunado porque mi primera y única relación estaba llena de tanto amor. Fue todo sobrenatural: nuestro reencuentro, ese atardecer aquel 17 de julio en el invu cuando decidimos ser novios y cómo Dios estuvo presente desde el principio. Lo atesoro en mi corazón.",
+        spotify: { song: "Canción del mes 1", artist: "Artista", url: "#" }
+      },
+      {
+        number: 2,
+        name: "Aprendiendo a respirar",
+        emoji: "🌿",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1X4TCwV7xc6FaXciue-Eha5YAqK2Zp07M') },
+          { url: getDriveUrl('1viAtHExC1RYHAlfIzMJg4P_R45HkHxe1') },
+          { url: getDriveUrl('1q4xo-urP2wbzr3QO9i5FHaffI-w5zdKd') },
+          { url: getDriveUrl('1nfI8_sgNlG1BjonvePaH5DGYGmjj3YSe') },
+          { url: getDriveUrl('12PN2JV2J9UtAQLtWVgik2ccK0rliwSRP') },
+          { url: getDriveUrl('1Ac7rHttpgOtCTG4gImWUUXS7QeRcPjRr') },
+          { url: getDriveUrl('1iu0F1aNdsxrj1xPOg5OTBdHDulk2u-S3') },
+          { url: getDriveUrl('1N0pHNgnbmzghNtIbVjxcuyTtGdWPDw7d') },
+        ],
+        text: "La magia de ser tortolitos aún flotaba en el aire y la vida empezaba a verse color de rosa. Vivimos mi graduación, compartimos el día a día, nos reíamos juntos todos lindos, salíamos a comer y nos conocíamos más. Me encantaba cómo nos acoplábamos tan natural a la vida del otro. Aquí Dios nos puso nuestras primeras discusiones, que no lo sabíamos pero abrían camino para la sanación. Este mes lo defino como \"aprendiendo a respirar\": aprendí a vivir y a respirar a tu lado.",
+        spotify: { song: "Canción del mes 2", artist: "Artista", url: "#" }
+      },
+      {
+        number: 3,
+        name: "Los primeros movimientos",
+        emoji: "🌸",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1RbZGJ_o8VS7RdgYDIzQuiRWiDrK8Ia1O') },
+          { url: getDriveUrl('1PUpcG3GrZJRhDms9lPKi5fZg3NNGC5Xh') },
+          { url: getDriveUrl('1Ul0XyQCIpbbc_SJLgZ9f7Oet6Bp9cQO1') },
+          { url: getDriveUrl('1myDuZshtTXyHGzBQBsVuFL7ydPGbeFaY') },
+          { url: getDriveUrl('1i_xz5RvEi_kRHhP8BjvFqNxv82jwkDMp') },
+          { url: getDriveUrl('1eh6wwroblrUqBag3NVTZL8JQDEYWA426') },
+          { url: getDriveUrl('1HputTcos2SMzYAzu0koVH3PbP_CouRII') },
+          { url: getDriveUrl('1ayMRNCwuXXL-BusJ1fQotbOXF9l6-WoR') },
+          { url: getDriveUrl('1H2gxy9FOsHHefyBEoJWrRMcXOA1-q2xn') },
+          { url: getDriveUrl('1bCinU-wM95D7HjPKCevWQggrxi4k78F7') },
+          { url: getDriveUrl('1lDisIXE11PtMAnwut5Y-w59lwyOZ1DKl') },
+          { url: getDriveUrl('1xEk-FVIeTDBKsYP_j6coOz00V88pYlox') },
+          { url: getDriveUrl('1TPxZyQI1x4SPCB64BHM84VTRzkkWqxUD') },
+        ],
+        text: "En el tercer mes nuestro Tamagochi empezó a moverse de verdad. Dejaste de ser solo una semillita y comenzaste a formarte en mí vida. Fue un mes movido: mi cumpleaños, compartir con las familias, nuestra primera cita fuera del pueblo y viaje como novios fuera de Naranjito. Empezamos a proyectar tonteras (como hijos jaja). Todo se dio por gracia de Dios. Ya éramos una parejita consolidada que caminaba de la mano de Él.",
+        spotify: { song: "Canción del mes 3", artist: "Artista", url: "#" }
+      },
+      {
+        number: 4,
+        name: "Ya se puede sentir",
+        emoji: "🌻",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1N16PIUakcerAiF3LRaO1YudoLnEYD9HY') },
+          { url: getDriveUrl('1X7HFa23HaT_I9oWYrf15EcJZ2AiglXq5') },
+          { url: getDriveUrl('1FlFdNqqqUmVQDziNjAHBu9zPulXhYQu_') },
+          { url: getDriveUrl('15tJJpygnGepnFojjjGKjBbIOY9gLJ4ox') },
+          { url: getDriveUrl('1m0B7cb-rs1Ls3UMp6Fs5J6ykgSuWW6Uk') },
+          { url: getDriveUrl('1G5tvDv6TLqlYu2FuBSBDel80jexqruD8') },
+          { url: getDriveUrl('1aVhB4wkAs-3y2fATnQfR7pV0MVghMKbr') },
+          { url: getDriveUrl('1BpjaofQ0fsN36epPQCzG0BbyqYZm4Huw') },
+          { url: getDriveUrl('1ZNJpApHxb3NAwnEtm_UmXG_j3TDtO0LV') },
+          { url: getDriveUrl('1A57IHjXiOdgi8ql64F3WrK8QJWLUOLuB') },
+          { url: getDriveUrl('19CqTUH2KBK5YtoFtBRXroV3wP9gkDIrb') },
+          { url: getDriveUrl('19tQH4trk5SHhr0AmFXKbT-ZzvQ6Scy3z') },
+          { url: getDriveUrl('1h0Az3jM-VrzszdqPbv3okzNQR4C92sn4') },
+          { url: getDriveUrl('1dhbb0L7Tlix58hXo7iVbQJRm5LZ-vCGB') },
+          { url: getDriveUrl('1J4CtCZQR2KXEi0sklw7d6FgwLu4AtjDf') },
+          { url: getDriveUrl('1Iog_dZDAlnit8EgRYuO6pEYwfgjV02wD') },
+        ],
+        text: "En este mes mi corazón por fin empezó a sentir libre, sin miedo ni represión emocional. Seguimos viviendo momentos hermosos: salidas cotidianas, tiempo con Sandrito y mi familia, acompañarme al servicio y esa odisea de ir a Bagaces. Tuvimos muchas citas románticas de arroz con huevo y otros, y pude empezar a sentir tu amor enorme, tu calidez y lo bello que amas. También crecieron un poco las diferencias y discusiones, pero Dios las usó para acercarnos más, para que nuestras heridas dejaran de lastimar y se convirtieran en un canal para empatizar y amar.",
+        spotify: { song: "Canción del mes 4", artist: "Artista", url: "#" }
+      },
+      {
+        number: 5,
+        name: "El punto de no retorno",
+        emoji: "🔥",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1suqTV4Z0YUegUF3QUJmcFbCx2ZLrOs7z') },
+          { url: getDriveUrl('16DPfBT3Y20D-sR54_x8B6ozL053fjl3l') },
+          { url: getDriveUrl('1PfcNABjEH6kafpzySuqlaqm_3zKMxjxj') },
+          { url: getDriveUrl('1rsrwvcJA4ArlsswFYAal1N965gf_U05Z') },
+          { url: getDriveUrl('1AOB-j_9I55-BZst1jg83ks9L6zskjF7g') },
+          { url: getDriveUrl('1lBPqwkO7rD7lFyxTAqzJgta34VSqwiau') },
+          { url: getDriveUrl('10XaDCcbL4FsJVIWrFka11pbRDo0DnTfq') },
+          { url: getDriveUrl('1bo_KiQ_izmLJI2cRHn071YDxPy2Wh3cT') },
+          { url: getDriveUrl('1G4lsNxD1D8fk-yNns8aHDnV_0-47DYR9') },
+          { url: getDriveUrl('1M1mgQ62RVQRODYqTa0qiyezhs-I-uTyn') },
+          { url: getDriveUrl('1MchBcCxtdE8vPvB9qa4uuIjqXWehwezd') },
+          { url: getDriveUrl('1lTtIQ6TU9Si8wB7o6TwFxsH2M-jqbAEf') },
+          { url: getDriveUrl('1qMmFKj8WjJ4lsujvz3H_Olbh6gomCScI') },
+          { url: getDriveUrl('1s26hdHex5tMpnlYmId5cK2K3Dvzhhlsm') },
+          { url: getDriveUrl('1XhYwD7oKFsHIYFi5TstKzMDSAiCk8hL2') },
+          { url: getDriveUrl('1X_zvw27vbX4IA270fJtYR4J-lZOfv812') },
+          { url: getDriveUrl('1F_s8uaP5GrRyTQD86sROwDW7svapaUn8') },
+          { url: getDriveUrl('196bWjwSzzDuuEETl0sglUA-yR9p5WHVZ') },
+          { url: getDriveUrl('1_DoQ9KSHQQAvzMrUB9LOvkJtiohHCi5A') },
+          { url: getDriveUrl('1lDp2oySgtfbtS7AGBuwyJAl4u9j7QHkD') },
+        ],
+        text: "Llegamos al quinto mes y nuestra relación ya estaba más gestada. Vivimos Navidad y festividades en familia, pero también llegaron meses complicados donde nos tocó contenernos mutuamente. Ahí empezó el amor de verdad. A través de las pruebas Dios nunca nos dejó solos y nos bendijo con momentos lindos: caminatas a los Robles donde casi te perdemos y comimos pizza fría con sangría, eventos sociales después de peleas y días en los que te deleitabas con mis modas. Celebramos tu cumpleaños, Año Nuevo y el viaje al parque de diversiones donde casi me pierden. Fue la prueba real de cuánto queríamos estar juntos.",
+        spotify: { song: "Canción del mes 5", artist: "Artista", url: "#" }
+      },
+      {
+        number: 6,
+        name: "Sobrevivir juntos",
+        emoji: "🌙",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1D6OuXpmgOVKgqDGCMEeWxClf2rVNNApK') },
+          { url: getDriveUrl('1Pz-qqlIYtuB8wVSnhM0AsPtljGvy07fz') },
+          { url: getDriveUrl('1QutUnoJi-3q2L2gQFUk-DqVzA18ucAIv') },
+          { url: getDriveUrl('15EwmWksGMQqCBlIuOGEz4xC5HSxNGV55') },
+          { url: getDriveUrl('1RciaKMFCWBXlyPP9NeKjwcLq3oUQf3Sg') },
+          { url: getDriveUrl('1B03AJmhEMg0reKXQkoRZQTuC01elJboN') },
+          { url: getDriveUrl('1KDO_Y8XCQ0qwwieonDFB_ogvNxWG8GDj') },
+          { url: getDriveUrl('1PU9Ef75Pry9LxpvOk4NUOZ3fNSKEBgOm') },
+          { url: getDriveUrl('1dSsb8LyAHrLNHFo02ITtI8uohlZX6d5_') },
+          { url: getDriveUrl('1uli9Sp6VGNgdcl6WDACIWHJom3EKigFF') },
+          { url: getDriveUrl('1NO-c2er0wJEuYZzSznFcGMe7ziX_uYq6') },
+        ],
+        text: "En el sexto mes cayó una movida de piso fuerte. Empezamos a vernos menos, la rutina cambió cuando comenzaste a trabajar y tuvimos que reinventarnos. Llegó el famoso \"bichito culo huérfano\" (que por suerte ya casi no vemos). A pesar de las dificultades, nos mantuvimos creyendo y juntos. Hice todo para que tus días libres fueran especiales: desayunos, flores sorpresa, mascarillas por la noche y trasnochar juntos. Aprendimos a disfrutar cada segundo y a darnos tiempo consciente. Este mes fue aprender a sobrevivir juntos.",
+        spotify: { song: "Canción del mes 6", artist: "Artista", url: "#" }
+      },
+      {
+        number: 7,
+        name: "Volviendo a nosotros",
+        emoji: "🌊",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('12ljkztlHAyS172_4Gu2IvFPzSk3xqpiV') },
+          { url: getDriveUrl('1uZZfn6oK_8DasiQipaZBfFe1mTxGQVv5') },
+          { url: getDriveUrl('1P4jplPRIKhiNQVulcEbYBR_5L1lHnGSy') },
+          { url: getDriveUrl('1wHYKKTvZ0BTVVLTFJ9ySVc6yyLwqY8ro') },
+          { url: getDriveUrl('1HFwHljdzia07l2_15BYZqL7QfooJg9fh') },
+          { url: getDriveUrl('1GjacEN9nlnkw2G0FjJohsAvFffTVRWc1') },
+          { url: getDriveUrl('1jvsOznJY64O9-nFRxs7GnWnY-CFGlbS1') },
+          { url: getDriveUrl('1zOJhx-s2Yz5gW9l0Y2anBRdN2LHolgoL') },
+          { url: getDriveUrl('1Isyvfthxit6Svmla4XnRG75cECX-B6BT') },
+          { url: getDriveUrl('1kjJWUooiVj0ubNU6In69wXx5Eiy0-HIa') },
+          { url: getDriveUrl('1ReW_QUa5GWdlUhVQK5a9MPQXamQCj-2k') },
+        ],
+        text: "En el séptimo mes la rutina que vivimos hoy ya estaba instalada. Dios nos regaló ir a misa juntos, levantarnos a altas horas de la madrugada un par de domingos, días en el parque, el regalazo de acompañarte al fisioterapeuta, viajecitos y clases de batería hasta las 2 de la mañana. Terminábamos hablando en el carro de emociones profundas, de nuestra identidad y hasta de si éramos gays o lesbianas. Nos regaló también la noche estrellada más hermosa, que nos recordó que después del caos y el dolor siempre existe la posibilidad de volver a nuestra esencia y al amor que nos cautivó desde el inicio.",
+        spotify: { song: "Canción del mes 7", artist: "Artista", url: "#" }
+      },
+      {
+        number: 8,
+        name: "Ya casi",
+        emoji: "⭐",
+        locked: false,
+        photos: [
+          { url: getDriveUrl('1RFESsuze5IaaNkC8nHwtbd0NSfkZlC3s') },
+          { url: getDriveUrl('1xQPM7o_SO9YbdZ-5mh_M8mu5eUzvAtD8') },
+          { url: getDriveUrl('1KYjpoCossy1pKHvBZjDkQDTmITm--RrE') },
+          { url: getDriveUrl('1uy6J0R77EoBOFArqQ3IDcdSdNeGE-034') },
+          { url: getDriveUrl('1wJ42E5gmpc1l_mcce9TdWnd3PE6wE7ll') },
+          { url: getDriveUrl('1aW2RSARcFAEtIU6ivTiyjAZuDkPv4fOe') },
+          { url: getDriveUrl('1fpGQeg8UWGrOYFVRPt1InUY0IWCncQkU') },
+          { url: getDriveUrl('1NOXUztQslKMdEV3sqW6oWCdIyxMKeKq7') },
+          { url: getDriveUrl('1qPOL21V6RE_wc_MYGxtqi9QPpiBLLFuw') },
+        ],
+        text: "En el octavo mes nuestro Tamagotchi ya estaba casi listo para nacer. Cerramos heridas, tocamos fondo y vivimos mucho pánico, pero después de la tormenta más oscura empezó a salir el sol. Dejamos de solo sobrevivir y empezamos a amar en libertad. A pesar de vernos poco, cada minuto cuenta. Pasamos calvarios y desiertos, pero también muchas bendiciones. Dios nos ha mostrado que si nos unió desde el primer mes y nos tiene aquí después de ocho meses tan intensos, es porque tiene mucho más preparado para nosotros. Ya casi, mi amor.",
+        spotify: { song: "Canción del mes 8", artist: "Artista", url: "#" }
+      },
+      {
+        number: 9,
+        name: "El nacimiento",
+        emoji: "🥚",
+        locked: false,
+        isBirth: true,
+        photos: [],
+        text: "En este noveno mes solo puedo pedirle a Dios que tenga un buen día en sus manos. Ya tenemos retos y situaciones complicadas, pero siento que aunque la vida se ponga más difícil, nosotros ya no somos los mismos de aquel primer mes y nuestro amor ha madurado. Me siento muy emocionado, optimista y expectante por lo que Dios tiene para nuestro futuro. Solo nos queda vivirlo, romantizar nuestra vida y seguir amando tan bonito como lo hacemos. Feliz noveno mesiversario, Nanita. Te amo. Soy el más afortunado de tenerte a mi lado. Me maravilla todo lo que eres.",
+        spotify: { song: "La canción de hoy", artist: "Artista", url: "#" }
+      }
+    ];
+
+    // ─── SPLASH ──────────────────────────────────────────────────────────────
+    function enterApp() {
+      document.getElementById('splash').classList.add('hidden');
+      setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+        document.getElementById('music-player').classList.add('visible');
+        buildTimeline();
+      }, 800);
+    }
+
+    // ─── HELPER PARA GOOGLE DRIVE ────────────────────────────────────────────
+    // function declaration para que sea hoisted y esté disponible al evaluar months[]
+    function getDriveUrl(id) { return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1600` : ''; }
+
+    // ─── BUILD TIMELINE ──────────────────────────────────────────────────────
+    function buildTimeline() {
+      const container = document.getElementById('timelineGrid');
+
+      const bgs = [
+        '#f2c4b0','#e8b89e','#dda98a','#d49a7a',
+        '#c98c6e','#bf7f64','#b4745c','#aa6a55','#3b2a2a'
+      ];
+
+      months.forEach((m, i) => {
+        // Month 9 (isBirth) is handled by the constellation experience
+        if (m.isBirth) return;
+
+        const entry = document.createElement('div');
+        entry.className = 'month-entry' + (m.locked ? ' locked' : '');
+
+        // Support driveId or existing photos array
+        let imgUrl = '';
+        if (m.driveId) {
+          imgUrl = getDriveUrl(m.driveId);
+        } else if (m.photos && m.photos.length > 0) {
+          imgUrl = m.photos[0].url;
+        }
+
+        const bg = bgs[i];
+        const imgHtml = imgUrl
+          ? `<img src="${imgUrl}" alt="${m.name}">`
+          : `<span style="font-size:5rem;opacity:0.25;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">${m.emoji}</span>`;
+
+        if (m.locked) {
+          entry.innerHTML = `
+            <div class="month-visual" style="background:${bg}">
+              <div class="lock-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <span>Pronto</span>
+              </div>
+            </div>
+            <div class="month-info">
+              <span class="month-number">Capítulo ${m.number} ${m.emoji}</span>
+              <h2 class="month-title">${m.name}</h2>
+              <p style="font-style:italic;color:var(--muted);font-size:0.9rem;">Próximamente...</p>
+            </div>`;
+        } else {
+          entry.innerHTML = `
+            <div class="month-visual" style="background:${bg}">
+              ${imgHtml}
+            </div>
+            <div class="month-info">
+              <span class="month-number">Capítulo ${m.number} ${m.emoji}</span>
+              <h2 class="month-title">${m.name}</h2>
+              <p style="font-style:italic;color:var(--warm);font-size:0.9rem;">Toca para recordar...</p>
+            </div>`;
+          entry.addEventListener('click', () => openModal(i));
+        }
+
+        container.appendChild(entry);
+      });
+
+      // ─── SCROLL REVEAL ───────────────────────────────────────────────────
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('reveal'); });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.month-entry').forEach(el => observer.observe(el));
+    }
+
+    // ─── MODAL ───────────────────────────────────────────────────────────────
+    let currentPhotoIndex = 0;
+    let currentMonthPhotos = [];
+
+    function openModal(index) {
+      const m = months[index];
+      const overlay = document.getElementById('modalOverlay');
+      const content = document.getElementById('modalContent');
+      const modal = document.getElementById('modal');
+
+      currentPhotoIndex = 0;
+      currentMonthPhotos = m.photos || [];
+
+      if (m.isBirth) {
+        modal.className = 'modal birth-modal';
+        content.innerHTML = buildBirthModal(m);
+        setTimeout(launchConfetti, 300);
+      } else {
+        modal.className = 'modal';
+        content.innerHTML = buildRegularModal(m);
+      }
+
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function buildRegularModal(m) {
+      const hasPhotos = m.photos && m.photos.length > 0;
+      const photosHtml = hasPhotos ? buildPhotos(m.photos) : buildPhotoPlaceholder(m);
+
+      return `
+        ${photosHtml}
+        <div class="modal-body">
+          <p class="modal-meta">Mes ${m.number} · ${m.emoji}</p>
+          <h2 class="modal-title">${m.name}</h2>
+          <p class="modal-text">${m.text}</p>
+          ${buildSpotify(m.spotify)}
+        </div>`;
+    }
+
+    function buildBirthModal(m) {
+      return `
+        <div class="modal-photos" style="background: var(--deep);">
+          <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+          <div class="birth-egg">🥚✨</div>
+        </div>
+        <div class="modal-body">
+          <p class="modal-meta">Mes 9 · El nacimiento</p>
+          <h2 class="modal-title">${m.name}</h2>
+          <div class="certificate">
+            <p class="cert-title">Certificado de existencia</p>
+            <p class="cert-names">David & Nana</p>
+            <p class="cert-date">9 meses de gestación · ${new Date().getFullYear()}</p>
+          </div>
+          <p class="modal-text">${m.text}</p>
+          ${buildSpotify(m.spotify)}
+        </div>`;
+    }
+
+    function buildPhotos(photos) {
+      if (photos.length === 0) return '';
+      const slides = photos.map((p, i) =>
+        `<div class="photo-slide ${i === 0 ? 'active' : ''}" style="background-image:url('${p.url}')" data-index="${i}"></div>`
+      ).join('');
+      const dots = photos.length > 1 ? `
+        <div class="photo-nav">${photos.map((_,i) => `<div class="photo-dot ${i===0?'active':''}" onclick="goToSlide(${i});event.stopPropagation()"></div>`).join('')}</div>
+        <div class="photo-arrows">
+          <button class="photo-arrow" onclick="changeSlide(-1);event.stopPropagation()">‹</button>
+          <button class="photo-arrow" onclick="changeSlide(1);event.stopPropagation()">›</button>
+        </div>` : '';
+      return `<div class="modal-photos" style="cursor:zoom-in" onclick="openCurrentPhoto()">${slides}${dots}</div>`;
+    }
+
+    function buildPhotoPlaceholder(m) {
+      const bgs = ['#f2c4b0','#e8b89e','#dda98a','#d49a7a','#c98c6e','#bf7f64','#b4745c','#aa6a55','#3b2a2a'];
+      return `<div class="modal-photos" style="background:${bgs[m.number-1]};display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:4rem;opacity:0.4">${m.emoji}</span>
+      </div>`;
+    }
+
+    function buildSpotify(s) {
+      if (!s || s.url === '#' || !s.url) return '';
+      return `
+        <div class="spotify-section">
+          <p class="spotify-label">🎵 la canción del mes</p>
+          <div class="spotify-qr">
+            ${s.cover ? `<img src="${s.cover}" alt="cover" />` : `<div style="width:60px;height:60px;background:#1DB954;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎵</div>`}
+            <div class="spotify-info">
+              <p class="spotify-song">${s.song}</p>
+              <p class="spotify-artist">${s.artist}</p>
+              <a href="${s.url}" target="_blank" class="spotify-link">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#1DB954"><circle cx="12" cy="12" r="12"/><path d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6-.15-.5.15-1 .6-1.15 3.55-1.05 9.4-.85 13.1 1.35.45.25.6.85.35 1.3-.25.35-.85.5-1.3.25zm-.1 2.8c-.25.35-.7.5-1.05.25-2.7-1.65-6.8-2.15-9.95-1.15-.4.1-.85-.1-.95-.5-.1-.4.1-.85.5-.95 3.65-1.1 8.15-.55 11.25 1.35.3.15.45.65.2 1zm-1.2 2.75c-.2.3-.55.4-.85.2-2.35-1.45-5.3-1.75-8.8-.95-.35.1-.65-.15-.75-.45-.1-.35.15-.65.45-.75 3.8-.85 7.1-.5 9.7 1.1.35.15.4.55.25.85z" fill="white"/></svg>
+                Escuchar en Spotify
+              </a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function changeSlide(dir) {
+      if (document.getElementById('lightbox').classList.contains('open')) return;
+      const slides = document.querySelectorAll('.photo-slide');
+      const dots = document.querySelectorAll('.photo-dot');
+      if (!slides.length) return;
+      slides[currentPhotoIndex].classList.remove('active');
+      if (dots[currentPhotoIndex]) dots[currentPhotoIndex].classList.remove('active');
+      currentPhotoIndex = (currentPhotoIndex + dir + slides.length) % slides.length;
+      slides[currentPhotoIndex].classList.add('active');
+      if (dots[currentPhotoIndex]) dots[currentPhotoIndex].classList.add('active');
+    }
+
+    function goToSlide(i) {
+      if (document.getElementById('lightbox').classList.contains('open')) return;
+      const slides = document.querySelectorAll('.photo-slide');
+      const dots = document.querySelectorAll('.photo-dot');
+      slides[currentPhotoIndex].classList.remove('active');
+      if (dots[currentPhotoIndex]) dots[currentPhotoIndex].classList.remove('active');
+      currentPhotoIndex = i;
+      slides[currentPhotoIndex].classList.add('active');
+      if (dots[currentPhotoIndex]) dots[currentPhotoIndex].classList.add('active');
+    }
+
+    function openCurrentPhoto() {
+      if (!currentMonthPhotos.length) return;
+      openLightbox(currentMonthPhotos[currentPhotoIndex].url);
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBg(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    function openLightbox(url) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.getElementById('lightbox-img').src = '';
+      if (!document.getElementById('modalOverlay').classList.contains('open')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    function closeLightboxOnBg(e) {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    function toggleMusic() {
+      document.getElementById('music-embed').classList.toggle('open');
+    }
+
+    function addPhotoPrompt(monthNum) {
+      const url = prompt(`Pega aquí el link de Google Photos para el mes ${monthNum}:`);
+      if (url) {
+        const m = months[monthNum - 1];
+        if (!m.photos) m.photos = [];
+        m.photos.push({ url, caption: '' });
+        alert('¡Foto agregada! (se guarda solo mientras la página está abierta)');
+        openModal(monthNum - 1);
+      }
+    }
+
+    // ─── CONFETTI ────────────────────────────────────────────────────────────
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      if (!canvas) return;
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      const ctx = canvas.getContext('2d');
+      const particles = Array.from({length: 60}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 3 + 1,
+        color: ['#f2c4b0','#c9a96e','#d9826a','#fdf6ec','#fff'][Math.floor(Math.random()*5)],
+        tilt: Math.random() * 10 - 10,
+        tiltSpeed: Math.random() * 0.1 + 0.05,
+        angle: 0
+      }));
+
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.ellipse(p.x + p.tilt, p.y, p.r, p.r * 0.4, p.angle, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.y += p.d;
+          p.angle += p.tiltSpeed;
+          p.tilt = Math.sin(p.angle) * 12;
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+        });
+        frame++;
+        if (frame < 180) requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    // ─── MES 9 — FOTOS CONSTELACIÓN ─────────────────────────────────────────
+    // Agrega los IDs de Google Drive de las 9 fotos del mes 9 (orden de conexión)
+    const fotosConstelacion = [
+      '1kgW9fKliIDp0Ul1QG_BX_V7mUeGCPwqJ', // mes 1
+      '1X4TCwV7xc6FaXciue-Eha5YAqK2Zp07M', // mes 2
+      '1RbZGJ_o8VS7RdgYDIzQuiRWiDrK8Ia1O', // mes 3
+      '1N16PIUakcerAiF3LRaO1YudoLnEYD9HY', // mes 4
+      '1suqTV4Z0YUegUF3QUJmcFbCx2ZLrOs7z', // mes 5
+      '1D6OuXpmgOVKgqDGCMEeWxClf2rVNNApK', // mes 6
+      '12ljkztlHAyS172_4Gu2IvFPzSk3xqpiV', // mes 7
+      '1RFESsuze5IaaNkC8nHwtbd0NSfkZlC3s', // mes 8
+      '1eoMI6NeVQVOknZQyXTUmPLxvvrOBGWOW', // mes 1 (extra)
+    ];
+
+    // ─── CONSTELACIÓN ────────────────────────────────────────────────────────
+    let puntosTocados = [];
+    let seleccionados = new Set();
+
+    function irAConstelacion() {
+      const app = document.getElementById('app');
+      app.style.transition = 'opacity 0.8s ease';
+      app.style.opacity = '0';
+      setTimeout(() => {
+        app.style.display = 'none';
+        const con = document.getElementById('constelacion');
+        con.style.display = 'block';
+        con.scrollTop = 0;
+        puntosTocados = [];
+        seleccionados = new Set();
+        setupConstelacion();
+      }, 800);
+    }
+
+    function cerrarConstelacion() {
+      const con = document.getElementById('constelacion');
+      const container = document.getElementById('stars-container');
+      container.querySelectorAll('.star-photo').forEach(el => el.remove());
+      const space = document.getElementById('espacio-final');
+      space.querySelectorAll('.polaroid').forEach(el => el.remove());
+      space.style.display = 'none';
+      con.style.display = 'none';
+      con.scrollTop = 0;
+      const app = document.getElementById('app');
+      app.style.display = 'block';
+      requestAnimationFrame(() => { app.style.opacity = '1'; });
+    }
+
+    function setupConstelacion() {
+      const container = document.getElementById('stars-container');
+      container.querySelectorAll('.star-photo').forEach(el => el.remove());
+      const canvas = document.getElementById('lineas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const placeholders = ['🌟', '✨', '💫', '⭐', '🌙', '🌸', '🌿', '🌊', '🥚'];
+      const placeholderBgs = ['#1a1a3e','#1e1a3a','#231a3e','#1a1e3a','#1a2040','#1e1a3e','#231a40','#1a203e','#1a1a2e'];
+      const total = fotosConstelacion.length > 0 ? fotosConstelacion.length : placeholders.length;
+
+      const placedPositions = []; // shared across all stars for collision avoidance
+
+      for (let index = 0; index < total; index++) {
+        const id = fotosConstelacion[index];
+        let el;
+        if (id) {
+          el = document.createElement('img');
+          el.src = getDriveUrl(id);
+          el.alt = `Momento ${index + 1}`;
+        } else {
+          el = document.createElement('div');
+          el.textContent = placeholders[index];
+          el.style.background = placeholderBgs[index];
+        }
+        el.className = 'star-photo';
+
+        // Placement with collision avoidance (min 140px apart)
+        const minDist = 140;
+        const starSize = 110;
+        let px, py, attempts = 0;
+        do {
+          px = Math.random() * (window.innerWidth  - starSize - 40) + 20;
+          py = Math.random() * (window.innerHeight - starSize - 40) + 20;
+          attempts++;
+        } while (
+          attempts < 200 &&
+          placedPositions.some(p => Math.hypot(p.x - px, p.y - py) < minDist)
+        );
+        placedPositions.push({ x: px, y: py });
+        el.style.left = px + 'px';
+        el.style.top  = py + 'px';
+
+        el.onclick = () => {
+          const key = id || String(index);
+          if (seleccionados.has(key)) return;
+          seleccionados.add(key);
+          el.classList.add('active');
+          el.style.border = '3px solid var(--rose)';
+          const rect = el.getBoundingClientRect();
+          const p = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+          if (puntosTocados.length > 0) {
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([6, 8]);
+            ctx.moveTo(puntosTocados[puntosTocados.length - 1].x, puntosTocados[puntosTocados.length - 1].y);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+          puntosTocados.push(p);
+          if (seleccionados.size === total) {
+            console.log('¡Constelación completa!');
+            setTimeout(mostrarFinal, 1200);
+          }
+        };
+        container.appendChild(el);
+      }
+    }
+
+    function mostrarFinal() {
+      const space = document.getElementById('espacio-final');
+      space.style.display = 'block';
+
+      const total = fotosConstelacion.length > 0 ? fotosConstelacion.length : 9;
+      const placeholderEmojis = ['🌟', '✨', '💫', '⭐', '🌙', '🌸', '🌿', '🌊', '🥚'];
+
+      for (let i = 0; i < total; i++) {
+        const id = fotosConstelacion[i];
+        const pol = document.createElement('div');
+        pol.className = 'polaroid';
+        pol.style.left = (Math.random() * 60 + 10) + '%';
+        pol.style.top  = (120 + i * 40) + 'vh';
+        pol.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+        pol.innerHTML = id
+          ? `<img src="${getDriveUrl(id)}" alt="Momento ${i + 1}">`
+          : `<div style="width:100%;height:180px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:3rem;">${placeholderEmojis[i]}</div>`;
+        pol.addEventListener('mouseenter', () => pol.classList.add('zoomed'));
+        pol.addEventListener('mouseleave', () => pol.classList.remove('zoomed'));
+        space.appendChild(pol);
+      }
+
+      const btnTop = 120 + total * 40 + 25;
+      space.style.minHeight = (btnTop + 20) + 'vh';
+
+      const btn = document.createElement('button');
+      btn.className = 'reinicio-btn';
+      btn.style.position = 'absolute';
+      btn.style.top = btnTop + 'vh';
+      btn.style.left = '50%';
+      btn.style.transform = 'translateX(-50%)';
+      btn.textContent = 'Volver a comenzar';
+      btn.onclick = () => location.reload();
+      space.appendChild(btn);
+
+      setTimeout(() => {
+        document.getElementById('constelacion').scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+      }, 1000);
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    // buildTimeline is called from enterApp() after splash interaction
+  </script>
+</body>
+</html>
