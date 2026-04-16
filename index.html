@@ -153,6 +153,7 @@
       margin-bottom: 2.5rem;
       letter-spacing: 0.05em;
       text-shadow: 0 1px 4px rgba(59,42,42,0.18);
+      padding: 0 2rem;
     }
 
     .splash-btn {
@@ -1045,10 +1046,12 @@
       <p id="constelacion-hint">Une los 9 meses...</p>
     </div>
     <div id="espacio-final">
-      <img class="tamagochi-final" src="https://drive.google.com/thumbnail?id=1IbxjvW01Bt-Wv7ZJEBols6_rsHDUDD4a&sz=w400" alt="tamagochi nacido" />
-      <h1 style="color:white; text-align:center; font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3rem); margin-bottom:1rem;">¡Nació el amor!</h1>
-      <p style="color:var(--blush); text-align:center; font-family:'Homemade Apple',cursive; font-size:1.1rem; padding:0 2rem; margin-bottom:2rem;">Feliz noveno mesiversario, Nana.</p>
-      <p style="color:rgba(253,246,236,0.88); text-align:center; font-family:'DM Sans',sans-serif; font-size:1rem; line-height:1.85; padding:0 2rem 3rem; max-width:580px; margin-bottom: 20px; margin:0 auto; font-style:italic;">En este noveno mes solo puedo pedirle a Dios que nos tenga en sus manos. Ya tenemos retos y situaciones complicadas, pero siento que aunque la vida se ponga más difícil, nosotros ya no somos los mismos de aquel primer mes y nuestro amor ha madurado. Me siento muy emocionado, optimista y expectante por lo que Dios tiene para nuestro futuro. Solo nos queda vivirlo, romantizar nuestra vida y seguir amando tan bonito como lo hacemos. Feliz noveno mesiversario, Nanita. Te amo. Soy el más afortunado de tenerte a mi lado. Me maravilla todo lo que eres.</p>
+      <div id="espacio-header">
+        <img class="tamagochi-final" src="https://drive.google.com/thumbnail?id=1IbxjvW01Bt-Wv7ZJEBols6_rsHDUDD4a&sz=w400" alt="tamagochi nacido" />
+        <h1 style="color:white; text-align:center; font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3rem); margin-bottom:1rem;">¡Nació el amor!</h1>
+        <p style="color:var(--blush); text-align:center; font-family:'Homemade Apple',cursive; font-size:1.1rem; padding:0 2rem; margin-bottom:2rem;">Feliz noveno mesiversario, Nana.</p>
+        <p style="color:rgba(253,246,236,0.88); text-align:center; font-family:'DM Sans',sans-serif; font-size:1rem; line-height:1.85; padding:0 2rem 3rem; max-width:580px; margin-bottom: 20px; margin:0 auto; font-style:italic;">En este noveno mes solo puedo pedirle a Dios que nos tenga en sus manos. Ya tenemos retos y situaciones complicadas, pero siento que aunque la vida se ponga más difícil, nosotros ya no somos los mismos de aquel primer mes y nuestro amor ha madurado. Me siento muy emocionado, optimista y expectante por lo que Dios tiene para nuestro futuro. Solo nos queda vivirlo, romantizar nuestra vida y seguir amando tan bonito como lo hacemos. Feliz noveno mesiversario, Nanita. Te amo. Soy el más afortunado de tenerte a mi lado. Me maravilla todo lo que eres.</p>
+      </div>
     </div>
   </div>
 
@@ -1702,6 +1705,11 @@
       const space = document.getElementById('espacio-final');
       space.style.display = 'block';
 
+      // Measure actual header content height so polaroids never overlap it
+      const header = document.getElementById('espacio-header');
+      const headerPx = header.offsetHeight + 80; // 80px breathing room
+      const stepPx = Math.max(window.innerHeight * 0.4, 300); // ~40vh per polaroid
+
       const total = fotosConstelacion.length > 0 ? fotosConstelacion.length : 9;
       const placeholderEmojis = ['🌟', '✨', '💫', '⭐', '🌙', '🌸', '🌿', '🌊', '🥚'];
 
@@ -1710,7 +1718,7 @@
         const pol = document.createElement('div');
         pol.className = 'polaroid';
         pol.style.left = (Math.random() * 60 + 10) + '%';
-        pol.style.top  = (120 + i * 40) + 'vh';
+        pol.style.top  = (headerPx + i * stepPx) + 'px';
         pol.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
         pol.innerHTML = id
           ? `<img src="${getDriveUrl(id)}" alt="Momento ${i + 1}">`
@@ -1720,13 +1728,13 @@
         space.appendChild(pol);
       }
 
-      const btnTop = 120 + total * 40 + 25;
-      space.style.minHeight = (btnTop + 20) + 'vh';
+      const btnTopPx = headerPx + total * stepPx + 80;
+      space.style.minHeight = (btnTopPx + 200) + 'px';
 
       const btn = document.createElement('button');
       btn.className = 'reinicio-btn';
       btn.style.position = 'absolute';
-      btn.style.top = btnTop + 'vh';
+      btn.style.top = btnTopPx + 'px';
       btn.style.left = '50%';
       btn.style.transform = 'translateX(-50%)';
       btn.textContent = 'Volver a comenzar';
